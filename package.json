@@ -37,7 +37,14 @@
       "plugin:vue/essential",
       "@vue/airbnb"
     ],
-    "rules": {},
+    "rules": {
+      "no-restricted-syntax": [
+        "error",
+        "ForInStatement",
+        "LabeledStatement",
+        "WithStatement"
+      ]
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     },
