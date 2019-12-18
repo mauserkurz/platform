@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import common from '@/store/modules/common/';
+import core from '@/store/modules/core/';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    common,
+    core,
   },
 });
