@@ -51,3 +51,8 @@ export const EMPTY_CONFIG = {
   TYPE: 'empty',
 };
 export const ARROW_KEY_LIST = ['ArrowLeft', 'ArrowRight', 'ArrowUp'];
+export const STATUS_MAP = {
+  PLAYING: 'playing',
+  LOST: 'lost',
+  WON: 'won',
+};

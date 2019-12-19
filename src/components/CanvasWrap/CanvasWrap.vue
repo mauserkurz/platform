@@ -19,11 +19,11 @@
 // TODO add health
 // TODO add monster
 // TODO add help with keys and rules
+import { mapState, mapGetters, mapActions } from 'vuex';
 import GAME_LEVELS from '@/gameLevels';
-import State from '@/models/State';
 import Level from '@/models/Level';
 import Display from '@/components/Display/Display.vue';
-import { ARROW_KEY_LIST } from '@/consts';
+import { ARROW_KEY_LIST, STATUS_MAP } from '@/consts';
 
 // TODO add comments
 export default {
@@ -34,16 +34,21 @@ export default {
   data() {
     return {
       arrowKeys: {},
-      level: null,
-      state: null,
       clearCount: 0,
     };
   },
 
+  computed: {
+    ...mapState('core', ['level', 'actors', 'status']),
+    ...mapGetters('core', ['player', 'state']),
+  },
+
   methods: {
+    ...mapActions('core', ['start', 'update']),
+
     trackArrowKeys() {
       const track = (event) => {
-        if (this.state.status !== State.statusMap.playing) {
+        if (this.status !== STATUS_MAP.PLAYING) {
           this.resetArrowKeys();
           return;
         }
@@ -81,15 +86,15 @@ export default {
     },
 
     async runLevel(level) {
-      this.level = level;
-      this.state = State.start(level);
       let ending = 1;
+
+      this.start(level);
 
       return new Promise((resolve) => {
         this.runAnimation((time) => {
-          this.state = this.state.update(time, this.arrowKeys);
+          this.update({ time, keys: this.arrowKeys });
 
-          if (this.state.status === State.statusMap.playing) {
+          if (this.status === STATUS_MAP.PLAYING) {
             return true;
           }
           if (ending > 0) {
@@ -97,7 +102,7 @@ export default {
             return true;
           }
           this.clearCount += 1;
-          resolve(this.state.status);
+          resolve(this.status);
           return false;
         });
       });
@@ -110,9 +115,9 @@ export default {
         // eslint-disable-next-line no-await-in-loop
         const status = await this.runLevel(new Level(plans[level]));
 
-        if (status === State.statusMap.won) {
+        if (status === STATUS_MAP.WON) {
           level += 1;
-        } else if (status === State.statusMap.lost) {
+        } else if (status === STATUS_MAP.LOST) {
           // TODO replace alert with component notificator
           // eslint-disable-next-line no-alert
           alert('You lost');

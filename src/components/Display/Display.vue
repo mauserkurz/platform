@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import State from '@/models/State';
 import Level from '@/models/Level';
 import {
   SCALE,
@@ -21,6 +20,7 @@ import {
   LAVA_CONFIG,
   COIN_CONFIG,
   EMPTY_CONFIG,
+  STATUS_MAP,
 } from '@/consts';
 
 // TODO add comments
@@ -30,7 +30,7 @@ export default {
   props: {
     state: {
       required: true,
-      validator: prop => prop instanceof State || prop === null,
+      validator: prop => typeof prop === 'object' || prop === null,
     },
 
     level: {
@@ -141,9 +141,9 @@ export default {
 
     clearDisplay(status) {
       const BACKGROUND_COLOR_MAP = {
-        [State.statusMap.playing]: 'rgb(52, 166, 251)',
-        [State.statusMap.lost]: 'rgb(44, 136, 214)',
-        [State.statusMap.won]: 'rgb(68, 191, 255)',
+        [STATUS_MAP.PLAYING]: 'rgb(52, 166, 251)',
+        [STATUS_MAP.LOST]: 'rgb(44, 136, 214)',
+        [STATUS_MAP.WON]: 'rgb(68, 191, 255)',
       };
 
       this.cx.fillStyle = BACKGROUND_COLOR_MAP[status];

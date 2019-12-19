@@ -1,8 +1,6 @@
-import State from '@/models/State';
 import Vector from '@/models/Vector';
-import { COIN_CONFIG } from '@/consts';
+import { COIN_CONFIG, STATUS_MAP } from '@/consts';
 
-// TODO DI of State
 // TODO DI of Vector
 const COIN_SIZE = new Vector(COIN_CONFIG.WIDTH, COIN_CONFIG.HEIGHT);
 
@@ -40,14 +38,14 @@ export default class Coin {
     );
   }
 
-  collide({ actors, status, level }) {
+  collide({ actors, status }) {
     const filtered = actors.filter(a => a !== this);
     let currentStatus = status;
 
     if (!filtered.some(a => a.type === COIN_CONFIG.TYPE)) {
-      currentStatus = State.statusMap.won;
+      currentStatus = STATUS_MAP.WON;
     }
-    return new State(level, filtered, currentStatus);
+    return { actors: filtered, status: currentStatus };
   }
 
   static create(pos) {

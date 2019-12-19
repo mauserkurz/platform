@@ -1,8 +1,6 @@
 import Vector from '@/models/Vector';
-import State from '@/models/State';
-import { LAVA_CONFIG, WALL_CONFIG } from '@/consts';
+import { LAVA_CONFIG, WALL_CONFIG, STATUS_MAP } from '@/consts';
 
-// TODO DI of State
 // TODO DI of Vector?
 const LAVA_SIZE = new Vector(LAVA_CONFIG.WIDTH, LAVA_CONFIG.HEIGHT);
 
@@ -39,8 +37,8 @@ export default class Lava {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  collide(state) {
-    return new State(state.level, state.actors, State.statusMap.lost);
+  collide({ actors }) {
+    return { actors, status: STATUS_MAP.LOST };
   }
 
   static create(pos, ch) {
