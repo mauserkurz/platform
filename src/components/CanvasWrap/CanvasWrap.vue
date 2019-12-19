@@ -43,6 +43,11 @@ export default {
   methods: {
     trackArrowKeys() {
       const track = (event) => {
+        if (this.state.status !== State.statusMap.playing) {
+          this.resetArrowKeys();
+          return;
+        }
+
         if (ARROW_KEY_LIST.includes(event.key)) {
           this.arrowKeys[event.key] = event.type === 'keydown';
           event.preventDefault();
