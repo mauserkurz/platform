@@ -1,19 +1,19 @@
 import { setProp, plus } from '@/store/reusable';
-import Vector from '@/models/Vector';
-import Player from '@/models/Player';
-import Lava from '@/models/Lava';
-import Coin from '@/models/Coin';
+import createVector from '@/models/vector/';
+import createPlayer from '@/models/player/';
+import createLava from '@/models/lava/';
+import createInitialCoin from '@/models/coin/';
 import { LAVA_CONFIG, WALL_CONFIG, EMPTY_CONFIG } from '@/consts';
 
 const LEVEL_CHAR_MAP = {
   '.': EMPTY_CONFIG.TYPE,
   '#': WALL_CONFIG.TYPE,
   '+': LAVA_CONFIG.TYPE,
-  '=': Lava,
-  '|': Lava,
-  v: Lava,
-  o: Coin,
-  '@': Player,
+  '=': createLava,
+  '|': createLava,
+  v: createLava,
+  o: createInitialCoin,
+  '@': createPlayer,
 };
 
 // TODO add comments
@@ -66,13 +66,13 @@ export default {
         .split('\n')
         .map(row => row.trim().split(''))
         .map((row, y) => row.map((char, x) => {
-          const type = LEVEL_CHAR_MAP[char];
+          const entity = LEVEL_CHAR_MAP[char];
 
-          if (typeof type === 'string') {
-            return type;
+          if (typeof entity === 'string') {
+            return entity;
           }
 
-          startActors.push(type.create(new Vector(x, y), char));
+          startActors.push(entity(createVector(x, y), char));
           return EMPTY_CONFIG.TYPE;
         }));
 

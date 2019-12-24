@@ -1,4 +1,4 @@
-import DisplayWrap from '@/components/CanvasWrap/DisplayWrap.vue';
+import DisplayWrap from '@/components/DisplayWrap/DisplayWrap.vue';
 
 export default [
   {

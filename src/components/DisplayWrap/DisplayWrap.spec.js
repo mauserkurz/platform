@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import DisplayWrap from '@/components/CanvasWrap/DisplayWrap.vue';
+import DisplayWrap from '@/components/DisplayWrap/DisplayWrap.vue';
 
 describe('component DisplayWrap', () => {
   describe('rendering', () => {

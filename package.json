@@ -72,7 +72,8 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/components/**/*.vue",
-      "src/store/modules/**/*.js"
+      "src/store/modules/**/*.js",
+      "src/models/**/*.js"
     ],
     "coverageReporters": [
       "text",

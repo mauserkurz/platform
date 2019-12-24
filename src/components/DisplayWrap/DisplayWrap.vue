@@ -1,11 +1,8 @@
 <template>
-  <div class="display-wrap">
-    <Display/>
-  </div>
+  <Display/>
 </template>
 
 <script>
-// TODO add logic to store
 // TODO store unit test
 // TODO unit test
 // TODO add es6 - es10 babel plugins
@@ -129,7 +126,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="less">
-.display-wrap {}
-</style>
