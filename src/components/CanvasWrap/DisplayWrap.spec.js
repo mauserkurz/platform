@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
-import CanvasWrap from '@/components/CanvasWrap/CanvasWrap.vue';
+import DisplayWrap from '@/components/CanvasWrap/DisplayWrap.vue';
 
-describe('component CanvasWrap', () => {
+describe('component DisplayWrap', () => {
   describe('rendering', () => {
     it('should render html', () => {
-      const wrapper = mount(CanvasWrap);
+      const wrapper = mount(DisplayWrap);
 
       expect(wrapper.html()).toMatchSnapshot();
     });

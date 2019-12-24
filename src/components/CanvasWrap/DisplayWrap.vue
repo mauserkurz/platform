@@ -1,9 +1,6 @@
 <template>
-  <div class="canvas-wrap">
-    <Display
-      :level="level"
-      :state="state"
-      :clear-count="clearCount"/>
+  <div class="display-wrap">
+    <Display/>
   </div>
 </template>
 
@@ -19,31 +16,27 @@
 // TODO add health
 // TODO add monster
 // TODO add help with keys and rules
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import GAME_LEVELS from '@/gameLevels';
-import Level from '@/models/Level';
 import Display from '@/components/Display/Display.vue';
 import { ARROW_KEY_LIST, STATUS_MAP } from '@/consts';
 
 // TODO add comments
 export default {
-  name: 'CanvasWrap',
+  name: 'DisplayWrap',
 
   components: { Display },
 
   data() {
-    return {
-      arrowKeys: {},
-      clearCount: 0,
-    };
+    return { arrowKeys: {} };
   },
 
   computed: {
-    ...mapState('core', ['level', 'actors', 'status']),
-    ...mapGetters('core', ['player', 'state']),
+    ...mapState('core', ['status']),
   },
 
   methods: {
+    ...mapMutations('level', ['ADD_END_LEVEL', 'ADD_END_LEVEL']),
     ...mapActions('core', ['start', 'update']),
 
     trackArrowKeys() {
@@ -85,10 +78,11 @@ export default {
       requestAnimationFrame(frame);
     },
 
-    async runLevel(level) {
+    async runLevel(plan) {
       let ending = 1;
 
-      this.start(level);
+      this.start(plan);
+      this.ADD_END_LEVEL();
 
       return new Promise((resolve) => {
         this.runAnimation((time) => {
@@ -101,7 +95,7 @@ export default {
             ending -= time;
             return true;
           }
-          this.clearCount += 1;
+          this.ADD_END_LEVEL();
           resolve(this.status);
           return false;
         });
@@ -113,7 +107,7 @@ export default {
 
       for (let level = 0; level < plans.length;) {
         // eslint-disable-next-line no-await-in-loop
-        const status = await this.runLevel(new Level(plans[level]));
+        const status = await this.runLevel(plans[level]);
 
         if (status === STATUS_MAP.WON) {
           level += 1;
@@ -137,5 +131,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-.canvas-wrap {}
+.display-wrap {}
 </style>

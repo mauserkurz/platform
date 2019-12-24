@@ -11,7 +11,6 @@ export default {
   namespaced: true,
 
   state: {
-    level: null,
     actors: [],
     status: '',
   },
@@ -21,32 +20,33 @@ export default {
       return state.actors.find(a => a.type === PLAYER_CONFIG.TYPE);
     },
 
-    state(state, getters) {
-      return {
-        level: state.level,
-        actors: state.actors,
-        status: state.status,
-        player: getters.player,
-      };
+    stateChange(state, _, rootState) {
+      return [
+        state.actors,
+        state.status,
+        rootState.level.levelHeight,
+        rootState.level.levelWidth,
+        rootState.level.rows,
+      ];
     },
   },
 
   mutations: {
-    SET_LEVEL: setProp('level'),
     SET_ACTORS: setProp('actors'),
     SET_STATUS: setProp('status'),
   },
 
   actions: {
-    start({ commit }, level) {
-      commit('SET_LEVEL', level);
-      commit('SET_ACTORS', level.startActors);
+    start({ commit, dispatch }, plan) {
+      dispatch('level/createLevel', plan, { root: true });
       commit('SET_STATUS', STATUS_MAP.PLAYING);
     },
 
-    update({ state, getters, commit }, { time, keys }) {
+    // eslint-disable-next-line object-curly-newline
+    update({ state, getters, rootGetters, commit }, { time, keys }) {
+      const touches = rootGetters['level/touches'];
       const actors = state.actors
-        .map(actor => actor.update(time, { level: state.level }, keys));
+        .map(actor => actor.update(time, touches, keys));
 
       commit('SET_ACTORS', actors);
       if (state.status !== STATUS_MAP.PLAYING) {
@@ -54,14 +54,14 @@ export default {
       }
       const { player } = getters;
 
-      if (state.level.touches(player.pos, player.size, LAVA_CONFIG.TYPE)) {
+      if (touches(player.pos, player.size, LAVA_CONFIG.TYPE)) {
         commit('SET_STATUS', STATUS_MAP.LOST);
         return state.status;
       }
 
       for (const actor of actors) {
         if (actor !== player && overlap(actor, player)) {
-          const newState = actor.collide(getters.state);
+          const newState = actor.collide(state);
 
           commit('SET_ACTORS', newState.actors);
           commit('SET_STATUS', newState.status);

@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "analyze": "vue-cli-service build --report",
     "lint": "vue-cli-service lint",
     "unit": "vue-cli-service test:unit"
   },
@@ -26,6 +27,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "vue-cli-plugin-webpack-bundle-analyzer": "^2.0.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
@@ -64,13 +66,18 @@
     "last 2 versions"
   ],
   "jest": {
-    "testMatch": ["**/*.spec.js"],
+    "testMatch": [
+      "**/*.spec.js"
+    ],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/components/**/*.vue",
       "src/store/modules/**/*.js"
     ],
-    "coverageReporters": ["text", "lcov"],
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ],
     "preset": "@vue/cli-plugin-unit-jest"
   }
 }

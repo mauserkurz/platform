@@ -29,7 +29,7 @@ export default class Player {
     return this.#type;
   }
 
-  update(time, state, keys) {
+  update(time, touches, keys) {
     let { pos } = this;
     let xSpeed = 0;
 
@@ -41,14 +41,14 @@ export default class Player {
     }
     const movedX = pos.plus(new Vector(xSpeed * time, 0));
 
-    if (!state.level.touches(movedX, this.size, WALL_CONFIG.TYPE)) {
+    if (!touches(movedX, this.size, WALL_CONFIG.TYPE)) {
       pos = movedX;
     }
 
     let ySpeed = this.speed.y + time * this.#gravity;
     const movedY = pos.plus(new Vector(0, ySpeed * time));
 
-    if (!state.level.touches(movedY, this.size, WALL_CONFIG.TYPE)) {
+    if (!touches(movedY, this.size, WALL_CONFIG.TYPE)) {
       pos = movedY;
     } else if (keys.ArrowUp && ySpeed > 0) {
       ySpeed = -this.#jumpSpeed;

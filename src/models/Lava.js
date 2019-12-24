@@ -24,10 +24,10 @@ export default class Lava {
     return this.#type;
   }
 
-  update(time, state) {
+  update(time, touches) {
     const newPos = this.pos.plus(this.speed.times(time));
 
-    if (!state.level.touches(newPos, this.size, WALL_CONFIG.TYPE)) {
+    if (!touches(newPos, this.size, WALL_CONFIG.TYPE)) {
       return new Lava(newPos, this.speed, this.reset);
     }
     if (this.reset) {

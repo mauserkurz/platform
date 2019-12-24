@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Level from '@/models/Level';
+import { mapState, mapGetters } from 'vuex';
 import {
   SCALE,
   PLAYER_CONFIG,
@@ -26,23 +26,6 @@ import {
 // TODO add comments
 export default {
   name: 'Display',
-
-  props: {
-    state: {
-      required: true,
-      validator: prop => typeof prop === 'object' || prop === null,
-    },
-
-    level: {
-      required: true,
-      validator: prop => prop instanceof Level || prop === null,
-    },
-
-    clearCount: {
-      type: Number,
-      required: true,
-    },
-  },
 
   data() {
     return {
@@ -58,17 +41,27 @@ export default {
   },
 
   watch: {
-    level() {
+    countStartLevel() {
       this.init();
     },
 
-    state(value) {
-      this.syncState(value);
+    stateChange() {
+      if (this.countStartLevel) {
+        this.syncState();
+      }
     },
 
-    clearCount() {
-      this.clear();
+    countEndLevel() {
+      if (this.countStartLevel) {
+        this.clear();
+      }
     },
+  },
+
+  computed: {
+    ...mapState('core', ['actors', 'status']),
+    ...mapState('level', ['levelWidth', 'levelHeight', 'rows', 'countStartLevel', 'countEndLevel']),
+    ...mapGetters('core', ['player', 'stateChange']),
   },
 
   methods: {
@@ -78,7 +71,7 @@ export default {
       this.cx.translate(-around, 0);
     },
 
-    updateViewport({ level, player }) {
+    updateViewport(levelWidth, levelHeight, player) {
       const {
         left,
         top,
@@ -91,16 +84,16 @@ export default {
       if (center.x < left + margin) {
         this.viewport.left = Math.max(center.x - margin, 0);
       } else if (center.x > left + width - margin) {
-        this.viewport.left = Math.min(center.x + margin - width, level.width - width);
+        this.viewport.left = Math.min(center.x + margin - width, levelWidth - width);
       }
       if (center.y < top + margin) {
         this.viewport.top = Math.max(center.y - margin, 0);
       } else if (center.y > top + height - margin) {
-        this.viewport.top = Math.min(center.y + margin - height, level.height - height);
+        this.viewport.top = Math.min(center.y + margin - height, levelHeight - height);
       }
     },
 
-    drawBackground(level) {
+    drawBackground(rows) {
       const {
         left,
         top,
@@ -114,7 +107,7 @@ export default {
 
       for (let y = yStart; y < yEnd; y += 1) {
         for (let x = xStart; x < xEnd; x += 1) {
-          const tile = level.rows[y][x];
+          const tile = rows[y][x];
 
           if (tile === EMPTY_CONFIG.TYPE) {
             // eslint-disable-next-line no-continue
@@ -141,9 +134,9 @@ export default {
 
     clearDisplay(status) {
       const BACKGROUND_COLOR_MAP = {
-        [STATUS_MAP.PLAYING]: 'rgb(52, 166, 251)',
-        [STATUS_MAP.LOST]: 'rgb(44, 136, 214)',
-        [STATUS_MAP.WON]: 'rgb(68, 191, 255)',
+        [STATUS_MAP.PLAYING]: '#34a6fb',
+        [STATUS_MAP.LOST]: '#2c88d6',
+        [STATUS_MAP.WON]: '#44bfff',
       };
 
       this.cx.fillStyle = BACKGROUND_COLOR_MAP[status];
@@ -193,11 +186,11 @@ export default {
       }
     },
 
-    syncState(state) {
-      this.updateViewport(state);
-      this.clearDisplay(state.status);
-      this.drawBackground(state.level);
-      this.drawActors(state.actors);
+    syncState() {
+      this.updateViewport(this.levelWidth, this.levelHeight, this.player);
+      this.clearDisplay(this.status);
+      this.drawBackground(this.rows);
+      this.drawActors(this.actors);
     },
 
     clear() {
@@ -205,8 +198,8 @@ export default {
     },
 
     init() {
-      this.$refs.canvas.width = Math.min(600, this.level.width * SCALE);
-      this.$refs.canvas.height = Math.min(450, this.level.height * SCALE);
+      this.$refs.canvas.width = Math.min(600, this.levelWidth * SCALE);
+      this.$refs.canvas.height = Math.min(450, this.levelHeight * SCALE);
       this.cx = this.$refs.canvas.getContext('2d');
       this.viewport.width = this.$refs.canvas.width / SCALE;
       this.viewport.height = this.$refs.canvas.height / SCALE;

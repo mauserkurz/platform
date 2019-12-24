@@ -1,9 +1,9 @@
-import CanvasWrap from '@/components/CanvasWrap/CanvasWrap.vue';
+import DisplayWrap from '@/components/CanvasWrap/DisplayWrap.vue';
 
 export default [
   {
     path: '/',
-    name: 'canvas-wrap',
-    component: CanvasWrap,
+    name: 'display-wrap',
+    component: DisplayWrap,
   },
 ];
