@@ -71,8 +71,8 @@ const createLava = (pos, speed, reset) => ({
  */
 export default (pos, char) => {
   const typeMap = {
-    '=': createLava(pos, createVector(LAVA_CONFIG.HORIZONTAL.X_SPEED, LAVA_CONFIG.HORIZONTAL.Y_SPEED)),
-    '|': createLava(pos, createVector(LAVA_CONFIG.VERTICAL.X_SPEED, LAVA_CONFIG.VERTICAL.Y_SPEED)),
+    '=': createLava(pos, createVector(LAVA_CONFIG.HORIZONTAL.X_SPEED, LAVA_CONFIG.HORIZONTAL.Y_SPEED), null),
+    '|': createLava(pos, createVector(LAVA_CONFIG.VERTICAL.X_SPEED, LAVA_CONFIG.VERTICAL.Y_SPEED), null),
     v: createLava(
       pos,
       createVector(LAVA_CONFIG.FALLING.X_SPEED, LAVA_CONFIG.FALLING.Y_SPEED),

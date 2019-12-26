@@ -1,0 +1,308 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component Display rendering should render html 1`] = `<div class="display"><canvas></canvas> <img src="@/assets/sprites.png" class="display__sprite"> <img src="@/assets/player.png" class="display__sprite"></div>`;
+
+exports[`component Display store interaction при изменении stateChange должен отрисовать анимацию на canvas 1`] = `
+Array [
+  Object {
+    "props": Object {
+      "value": "#34a6fb",
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "fillStyle",
+  },
+  Object {
+    "props": Object {
+      "height": 120,
+      "width": 160,
+      "x": 0,
+      "y": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "fillRect",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 120,
+      "dy": 40,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 0,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 0,
+      "dy": 80,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 40,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 40,
+      "dy": 80,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 0,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 80,
+      "dy": 80,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 0,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 120,
+      "dy": 80,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 0,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 40,
+      "dWidth": 40,
+      "dx": 0,
+      "dy": 0,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 40,
+      "sWidth": 40,
+      "sx": 40,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {},
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "save",
+  },
+  Object {
+    "props": Object {
+      "x": 96,
+      "y": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      96,
+      0,
+    ],
+    "type": "translate",
+  },
+  Object {
+    "props": Object {
+      "x": -1,
+      "y": 1,
+    },
+    "transform": Array [
+      -1,
+      -0,
+      0,
+      1,
+      96,
+      0,
+    ],
+    "type": "scale",
+  },
+  Object {
+    "props": Object {
+      "x": -96,
+      "y": 0,
+    },
+    "transform": Array [
+      -1,
+      -0,
+      0,
+      1,
+      192,
+      0,
+    ],
+    "type": "translate",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 60,
+      "dWidth": 48,
+      "dx": 72,
+      "dy": 20,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/player.png"
+      />,
+      "sHeight": 60,
+      "sWidth": 48,
+      "sx": 48,
+      "sy": 0,
+    },
+    "transform": Array [
+      -1,
+      -0,
+      0,
+      1,
+      192,
+      0,
+    ],
+    "type": "drawImage",
+  },
+  Object {
+    "props": Object {},
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "restore",
+  },
+  Object {
+    "props": Object {
+      "dHeight": 24,
+      "dWidth": 24,
+      "dx": 120,
+      "dy": 20,
+      "img": <img
+        class="display__sprite"
+        src="@/assets/sprites.png"
+      />,
+      "sHeight": 24,
+      "sWidth": 24,
+      "sx": 80,
+      "sy": 0,
+    },
+    "transform": Array [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+    ],
+    "type": "drawImage",
+  },
+]
+`;

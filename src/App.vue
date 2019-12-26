@@ -1,5 +1,15 @@
 <template>
-  <div id="app" class="app">
+  <v-app id="app">
     <router-view/>
-  </div>
+  </v-app>
 </template>
+
+<script>
+export default { name: 'App' };
+</script>
+
+<style lang="less">
+@import '~vuetify/dist/vuetify.min.css';
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import '~@mdi/font/css/materialdesignicons.css';
+</style>

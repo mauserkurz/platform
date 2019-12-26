@@ -1,44 +1,63 @@
 <template>
-  <Display/>
+  <div class="display-wrap">
+    <v-alert
+      v-if="isLost"
+      type="error"
+      dismissible>You lost</v-alert>
+    <v-alert
+      v-if="isAllLevelCompleted"
+      type="success"
+      dismissible>You've won!</v-alert>
+    <Display/>
+  </div>
 </template>
 
 <script>
-// TODO store unit test
-// TODO unit test
-// TODO add es6 - es10 babel plugins
-// TODO add exit game
-// TODO add restart level
-// TODO add restart game
-// TODO add pause
-// TODO add health
-// TODO add monster
-// TODO add help with keys and rules
 import { mapState, mapMutations, mapActions } from 'vuex';
 import GAME_LEVELS from '@/gameLevels';
 import Display from '@/components/Display/Display.vue';
 import { ARROW_KEY_LIST, STATUS_MAP } from '@/consts';
 
-// TODO add comments
 export default {
   name: 'DisplayWrap',
 
   components: { Display },
 
   data() {
-    return { arrowKeys: {} };
+    return {
+      arrowKeys: {},
+      isAllLevelCompleted: false,
+    };
   },
 
   computed: {
     ...mapState('core', ['status']),
+
+    isWon() {
+      return this.status === STATUS_MAP.WON;
+    },
+
+    isLost() {
+      return this.status === STATUS_MAP.LOST;
+    },
+
+    isPlaying() {
+      return this.status === STATUS_MAP.PLAYING;
+    },
   },
 
   methods: {
-    ...mapMutations('level', ['ADD_END_LEVEL', 'ADD_END_LEVEL']),
-    ...mapActions('core', ['start', 'update']),
+    ...mapMutations('level', ['ADD_END_LEVEL']),
+    ...mapActions('core', ['update']),
+    ...mapActions('level', ['start']),
 
+    /**
+     * Начнет отслеживать события нажатия клавишь, указанных в ARROW_KEY_LIST
+     * записывая зажатые клавиши в arrowKeys
+     */
     trackArrowKeys() {
       const track = (event) => {
-        if (this.status !== STATUS_MAP.PLAYING) {
+        if (!this.isPlaying) {
           this.resetArrowKeys();
           return;
         }
@@ -52,10 +71,18 @@ export default {
       window.addEventListener('keyup', track);
     },
 
+    /**
+     * Сбросит записи о нажатых клавишах, чтобы можно было останавливать
+     * игрока при смене статуса игры
+     */
     resetArrowKeys() {
       this.arrowKeys = {};
     },
 
+    /**
+     * Запустит анимацию, выполняя в каждом кадре переданную функцию
+     * @param {function} frameFunc - коллбэк, выполняющий обновление данных уровня
+     */
     runAnimation(frameFunc) {
       const SECOND = 1000;
       const TICK = 100;
@@ -65,7 +92,7 @@ export default {
         if (lastTime !== null) {
           const timeStep = Math.min(time - lastTime, TICK) / SECOND;
 
-          if (frameFunc(timeStep) === false) {
+          if (!frameFunc(timeStep)) {
             return;
           }
         }
@@ -75,17 +102,22 @@ export default {
       requestAnimationFrame(frame);
     },
 
+    /**
+     * Подготовит дынные об уровне, используя переданный шаблон, запустит анимацию, во время которой
+     * будут сменяться данные о уровне и перересовываться canvas
+     * @param {string} plan - строка шаблон уровня
+     * @return {Promise<undefined>}
+     */
     async runLevel(plan) {
       let ending = 1;
 
       this.start(plan);
-      this.ADD_END_LEVEL();
 
       return new Promise((resolve) => {
         this.runAnimation((time) => {
           this.update({ time, keys: this.arrowKeys });
 
-          if (this.status === STATUS_MAP.PLAYING) {
+          if (this.isPlaying) {
             return true;
           }
           if (ending > 0) {
@@ -93,36 +125,35 @@ export default {
             return true;
           }
           this.ADD_END_LEVEL();
-          resolve(this.status);
+          resolve();
           return false;
         });
       });
     },
-
-    async runGame(plans) {
-      this.trackArrowKeys();
-
-      for (let level = 0; level < plans.length;) {
-        // eslint-disable-next-line no-await-in-loop
-        const status = await this.runLevel(plans[level]);
-
-        if (status === STATUS_MAP.WON) {
-          level += 1;
-        } else if (status === STATUS_MAP.LOST) {
-          // TODO replace alert with component notificator
-          // eslint-disable-next-line no-alert
-          alert('You lost');
-        }
-        this.resetArrowKeys();
-      }
-      // TODO replace alert with component notificator
-      // eslint-disable-next-line no-alert
-      alert("You've won!");
-    },
   },
 
-  mounted() {
-    this.runGame(GAME_LEVELS);
+  /**
+   * Начнет отслеживание нажатых клавишь и стартует последовательный запуск уровеней
+   * при прохождении или перезапуск при проигрыше
+   * @return {Promise<void>}
+   */
+  async mounted() {
+    this.trackArrowKeys();
+
+    for (let level = 0; level < GAME_LEVELS.length;) {
+      // eslint-disable-next-line no-await-in-loop
+      await this.runLevel(GAME_LEVELS[level]);
+
+      if (this.isWon) {
+        level += 1;
+      }
+      this.resetArrowKeys();
+    }
+    this.isAllLevelCompleted = true;
   },
 };
 </script>
+
+<style scoped lang="less">
+.display-wrap {}
+</style>
