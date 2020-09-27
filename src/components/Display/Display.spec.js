@@ -28,8 +28,28 @@ describe('component Display', () => {
   };
   // eslint-disable-next-line no-underscore-dangle
   const checkCanvas = wrapper => expect(wrapper.vm.cx.__getEvents()).toMatchSnapshot();
+  const clientStub = {
+    clientWidth: 600,
+    clientHeight: 450,
+
+    reset() {
+      this.clientWidth = 600;
+      this.clientHeight = 450;
+    },
+  };
 
   Date.now = jest.fn().mockReturnValue(1577416453535);
+  Object.defineProperty(document.documentElement, 'clientWidth', {
+    get() {
+      return clientStub.clientWidth;
+    },
+  });
+  Object.defineProperty(document.documentElement, 'clientHeight', {
+    get() {
+      return clientStub.clientWidth;
+    },
+  });
+
   describe('rendering', () => {
     it('should render html', () => {
       const { wrapper } = createWrapper();
@@ -147,7 +167,7 @@ describe('component Display', () => {
 
         store.commit('core/SET_ACTORS', [createPlayer(createVector(2.2, 17.5))]);
         store.commit('core/SET_STATUS', 'playing');
-        expect(wrapper.vm.viewport).toMatchObject({ top: 11.5, left: 0 });
+        expect(wrapper.vm.viewport).toMatchObject({ top: 7.75, left: 0 });
       });
     });
 
@@ -173,6 +193,42 @@ describe('component Display', () => {
       wrapper.vm.cx.clearRect = mock;
       store.commit('level/ADD_END_LEVEL');
       expect(mock).toBeCalledWith(0, 0, 160, 120);
+    });
+  });
+
+  describe('events', () => {
+    it('должен по событию resize переписать размеры viewport и canvas', () => {
+      const levelClone = clone(level);
+      const coreClone = clone(core);
+      const map = {};
+
+      window.addEventListener = (event, cb) => {
+        map[event] = cb;
+      };
+      levelClone.state.levelHeight = 30;
+      levelClone.state.levelWidth = 30;
+      levelClone.state.rows = Array.from(
+        { length: 30 },
+        (index) => {
+          const entity = index === 8 ? 'wall' : 'empty';
+
+          return Array.from({ length: 30 }, () => entity);
+        },
+      );
+      coreClone.state.actors = [createPlayer(createVector(20, 0.5))];
+      const { wrapper, store } = createWrapper({
+        modules: {
+          level: levelClone,
+          core: coreClone,
+        },
+      });
+
+      store.commit('core/SET_ACTORS', [createPlayer(createVector(2.2, 17.5))]);
+      store.commit('core/SET_STATUS', 'playing');
+      clientStub.clientWidth = 800;
+      map.resize(new Event('resize'));
+      expect(wrapper.vm.viewport).toMatchObject({ top: 7.75, left: 0 });
+      clientStub.reset();
     });
   });
 });

@@ -16,7 +16,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
 import GAME_LEVELS from '@/gameLevels';
 import Display from '@/components/Display/Display.vue';
-import { ARROW_KEY_LIST, STATUS_MAP } from '@/consts';
+import { ARROW_KEY_LIST, IE_ARROW_KEY_LIST, STATUS_MAP } from '@/consts';
 
 export default {
   name: 'DisplayWrap',
@@ -27,6 +27,7 @@ export default {
     return {
       arrowKeys: {},
       isAllLevelCompleted: false,
+      isIE: window.navigator.userAgent.match(/Trident/g),
     };
   },
 
@@ -53,22 +54,29 @@ export default {
 
     /**
      * Начнет отслеживать события нажатия клавишь, указанных в ARROW_KEY_LIST
+     * или IE_ARROW_KEY_LIST если это Internet Explorer
      * записывая зажатые клавиши в arrowKeys
      */
     trackArrowKeys() {
-      const track = (event) => {
-        if (!this.isPlaying) {
-          this.resetArrowKeys();
-          return;
-        }
+      const createTracker = (isIE) => {
+        const keysList = isIE ? IE_ARROW_KEY_LIST : ARROW_KEY_LIST;
+        const getKey = isIE ? key => `Arrow${key}` : key => key;
 
-        if (ARROW_KEY_LIST.includes(event.key)) {
-          this.arrowKeys[event.key] = event.type === 'keydown';
-          event.preventDefault();
-        }
+        return (event) => {
+          if (!this.isPlaying) {
+            this.resetArrowKeys();
+            return;
+          }
+
+          if (keysList.includes(event.key)) {
+            this.arrowKeys[getKey(event.key)] = event.type === 'keydown';
+            event.preventDefault();
+          }
+        };
       };
-      window.addEventListener('keydown', track);
-      window.addEventListener('keyup', track);
+
+      document.addEventListener('keydown', createTracker(this.isIE));
+      document.addEventListener('keyup', createTracker(this.isIE));
     },
 
     /**
