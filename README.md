@@ -1,31 +1,25 @@
-# platform
+# Проект игры Platform
 
-This project is basic platform game, it will be roughly based on [Dark Blue](http://www.lessmilk.com/games/10) by Thomas Palef
+## [Рабочее приложение на gh-pages](https://mauserkurz.github.io/platform/dist/)
+* описание: простой платформер, который основан на логике игры представленной в книге [Eloquent JavaScript](https://eloquentjavascript.net/16_game.html)
+* использование: главный герой управляется курсорами для ходьбы вправо и влево, для прыжков используется курсор вверх, для победы требуется собрать все монетки на уровне, поражение засчитывается когда игрок прикоснется к лаве
+* фреймворк: vue 2.6.11
 
-## Project setup
-```
-npm install
-```
+### Использованные технологии
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+* vue/vuex/vue-router
+* less
+* вёрска на основе библиотеки компонентов vuetify
+* canvas
+* покрытие unit тестами с использование jest
+* кроссбраузерно - ie 11, edge, firefox, chrome, opera, safari
 
-### Compiles and minifies for production
-```
-npm run build
-```
+`npm install` - установка зависимостей
 
-### Lints and fixes files
-```
-npm run lint
-```
+`npm run serve` - компиляция с горячей заменой в режиме разработки
 
-### Run your unit tests
-```
-npm run unit
-```
+`npm run build` - компиляция и минификация для production
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`npm run lint` - статическая проверка кода
+
+`npm run unit` - запуск unit тестов

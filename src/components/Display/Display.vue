@@ -21,7 +21,6 @@ import {
   COIN_CONFIG,
   EMPTY_CONFIG,
   STATUS_MAP,
-  MIN_CANVAS_SIZE,
 } from '@/consts';
 
 export default {
@@ -77,18 +76,20 @@ export default {
         width,
         height,
       } = this.viewport;
-      const margin = width / 3;
+      const getMargin = size => size / 3;
+      const horizontalMargin = getMargin(width);
+      const verticalMargin = getMargin(height);
       const center = player.pos.plus(player.size.times(0.5));
 
-      if (center.x < left + margin) {
-        this.viewport.left = Math.max(center.x - margin, 0);
-      } else if (center.x > left + width - margin) {
-        this.viewport.left = Math.min(center.x + margin - width, levelWidth - width);
+      if (center.x < left + horizontalMargin) {
+        this.viewport.left = Math.max(center.x - horizontalMargin, 0);
+      } else if (center.x > left + width - horizontalMargin) {
+        this.viewport.left = Math.min(center.x + horizontalMargin - width, levelWidth - width);
       }
-      if (center.y < top + margin) {
-        this.viewport.top = Math.max(center.y - margin, 0);
-      } else if (center.y > top + height - margin) {
-        this.viewport.top = Math.min(center.y + margin - height, levelHeight - height);
+      if (center.y < top + verticalMargin) {
+        this.viewport.top = Math.max(center.y - verticalMargin, 0);
+      } else if (center.y > top + height - verticalMargin) {
+        this.viewport.top = Math.min(center.y + verticalMargin - height, levelHeight - height);
       }
     },
 
@@ -111,6 +112,10 @@ export default {
 
       for (let y = yStart; y < yEnd; y += 1) {
         for (let x = xStart; x < xEnd; x += 1) {
+          if (!rows[y] || !rows[y][x]) {
+            // eslint-disable-next-line no-continue
+            continue;
+          }
           const tile = rows[y][x];
 
           if (tile === EMPTY_CONFIG.TYPE) {
@@ -237,14 +242,25 @@ export default {
     },
 
     /**
+     * Перепишит размера canvas на размер открытого окна или размер уровня,
+     * если он меньше окна
+     */
+    resizeCanvas() {
+      const { clientWidth, clientHeight } = document.documentElement;
+
+      this.$refs.canvas.width = Math.min(clientWidth, this.levelWidth * SCALE);
+      this.$refs.canvas.height = Math.min(clientHeight, this.levelHeight * SCALE);
+      this.viewport.width = this.$refs.canvas.width / SCALE;
+      this.viewport.height = this.$refs.canvas.height / SCALE;
+    },
+
+    /**
      * Подготовит canvas к отрисовке уровня на нем, задав ему размеры и записав контекст
      */
     init() {
-      this.$refs.canvas.width = Math.min(MIN_CANVAS_SIZE.WIDTH, this.levelWidth * SCALE);
-      this.$refs.canvas.height = Math.min(MIN_CANVAS_SIZE.HEIGHT, this.levelHeight * SCALE);
+      this.resizeCanvas();
       this.cx = this.$refs.canvas.getContext('2d');
-      this.viewport.width = this.$refs.canvas.width / SCALE;
-      this.viewport.height = this.$refs.canvas.height / SCALE;
+      window.addEventListener('resize', () => this.resizeCanvas());
     },
   },
 };

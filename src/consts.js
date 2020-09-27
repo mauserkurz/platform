@@ -51,6 +51,7 @@ export const EMPTY_CONFIG = {
   TYPE: 'empty',
 };
 export const ARROW_KEY_LIST = ['ArrowLeft', 'ArrowRight', 'ArrowUp'];
+export const IE_ARROW_KEY_LIST = ARROW_KEY_LIST.map(key => key.replace('Arrow', ''));
 export const STATUS_MAP = {
   PLAYING: 'playing',
   LOST: 'lost',
@@ -64,8 +65,4 @@ export const THEME = {
   info: '#2196F3',
   success: '#4CAF50',
   warning: '#FFC107',
-};
-export const MIN_CANVAS_SIZE = {
-  WIDTH: 600,
-  HEIGHT: 450,
 };

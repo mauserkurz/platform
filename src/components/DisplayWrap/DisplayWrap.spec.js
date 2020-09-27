@@ -49,7 +49,7 @@ describe('component DisplayWrap', () => {
       const map = {};
       let frameCallBack = null;
 
-      window.addEventListener = jest.fn((event, cb) => {
+      document.addEventListener = jest.fn((event, cb) => {
         map[event] = cb;
       });
       window.requestAnimationFrame = (frame) => {
@@ -69,7 +69,7 @@ describe('component DisplayWrap', () => {
       const map = {};
       let frameCallBack = null;
 
-      window.addEventListener = jest.fn((event, cb) => {
+      document.addEventListener = jest.fn((event, cb) => {
         map[event] = cb;
       });
       window.requestAnimationFrame = (frame) => {
